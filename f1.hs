@@ -1,5 +1,97 @@
 import Data.Char
 
+dist :: Floating a => (a, a) -> (a, a) -> a
+dist (x1,y1) (x2,y2) = sqrt ((x1-x2)^2 + (y1-y2)^2)
+
+truncaImpar :: [a] -> [a]
+truncaImpar l = if mod x 2 /= 0 then tail l else l
+    where x = length l
+-- usamos a variavel 'x' para representar o comprimento da lista l
+
+multiplo :: Integral a => a -> a -> Bool
+multiplo m n = if mod m n == 0
+
+--max2 :: Int -> Int -> Int
+--max2 x y = if x > y then x else y
+
+--max3 x y z = max2 x (max2 y z)
+
+-- //////////////////////////////////////////////////////////////////////////////
+
+nRaizes :: (Ord a, Num p, Floating a) => a -> a -> a -> p
+nRaizes a b c = if delta > 0 then 2 else if delta == 0 then 1 else 0
+    where delta = sqrt(b^2 -4*a*c)
+
+--raizes a b c = if nRaizes =
+-- FALTA FAZER ESTA
+
+type Hora = (Int,Int)
+data Hora = H Int Int deriving (Show,Eq)
+
+--hora Valida
+horaVal (x, y) = if x >= 0 && x < 24 && y >= 0 && y < 60 then True else False
+
+
+horaValv2 x y = if x >= 0 && x < 24 && y >= 0 && y < 60 then True else False
+--
+
+-- compara se a hora1 e dps da hora2
+horaComp (h1,m1) (h2,m2) | h1 < h2 = False
+                         | h1 == h2 && m1 < m2 = False
+                         | otherwise = True 
+
+
+horaCompv2 h1 m1 h2 m2 | h1 < h2 = False
+                       | h1 == h2 && m1 < m2 = False
+                       | otherwise = True 
+
+-- converte de horas para minutos
+horaConv (h,m) = h * 60 + m
+
+horaConvV2 h m = h * 60 + m
+--
+
+
+--converte de minutos para horas
+horaConv2 m = (div m 60,mod m 60)
+
+horaConv2V2 m = H (div m 60) (mod m 60)
+--
+
+
+--calcula a diferença entre duas horas em minutos
+horaDif (h1,m1) (h2,m2) = horaConv (h1-h2,m1-m2) 
+
+horaDifV2 h1 m1 h2 m2 = horaConvV2 (h1-h2) (m1-m2)
+     
+
+-- acrescentar minutos a uma hora
+horaAdd min (h,m) = horaConv2 (horaConv (h,m) + min)
+
+horaAddV2 min h m = horaConv2V2 (horaConvV2 h m + min)
+--
+
+
+-- //////////////////////////////////////////////////////////////////
+data Semaforo = Verde | Amarelo | Vermelho deriving (Show,Eq)
+
+next :: Semaforo -> Semaforo 
+next Verde = Amarelo
+next Amarelo = Vermelho
+next Vermelho = Verde
+
+stop :: Semaforo -> Bool 
+stop x = if x == Vermelho then True else False
+
+safe :: Semaforo -> Semaforo -> Bool 
+safe x y | x == Verde && y == Verde = False
+         | x == Verde && y == Amarelo = False
+         | x == Amarelo && y == Verde = False
+         | x == Amarelo && y == Amarelo = False
+         | otherwise = True
+
+
+
 --6.
             -- Cartesiano x y           Polar r a
 data Ponto = Cartesiano Double Double | Polar Double Double 
