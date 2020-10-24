@@ -65,7 +65,10 @@ colocaEntre x (h:hs) = h : x : colocaEntre x hs
 --grupa (x:xs) = 
 
 
--- 13. desgrupa [[1],[2,2],[3],[4,4,4],[5],[4]] corresponde a [1,2,2,3,4,4,4,5,4]
-desgrupa :: [[a]] -> [a]
-desgrupa [] = []
-desgrupa [h:hs] =  h : desgrupa [hs]
+
+
+-- 28. As posicoes da lista comecam em 0, i.e., 
+--  funcao devera retornar 0 se o primeiro elemento da lista for o maior.
+pMaior :: Ord a => [a] -> Int
+pMaior (h:hs) = if h == maximum (h:hs) then 0 
+                else 1 + pMaior hs
