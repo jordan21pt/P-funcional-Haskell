@@ -11,33 +11,34 @@ dobros (h:hs) = 2*h : dobros hs
 numOcorre :: Char -> String -> Int
 numOcorre _ [] = 0
 numOcorre x (h:hs) = if x == h then 1 + numOcorre x hs
-                                else numOcorre x hs
+                     else numOcorre x hs
 
 --c. que testa se uma lista so tem elementos positivos. 
 positivos :: [Int] -> Bool
 positivos [] = True
 positivos (h:hs) = if (h > 0) then positivos hs
-                    else False
+                   else False
 
 --d. que retira todos os elementos 
 --    nao positivos de uma lista de inteiros
 soPos :: [Int] -> [Int]
 soPos [] = []
 soPos (h:hs) = if h > 0 then h : soPos hs
-                else soPos hs
-
+               else soPos hs
 
 --e. que soma todos os nu´meros negativos da lista de entrada.
---eg :: [Int] -> Int
---eg [] = [] 
-
+somaNeg :: [Int] -> Int
+somaNeg [] = 0
+somaNeg (h:hs) = if (h < 0) then h + somaNeg hs
+                 else somaNeg hs 
 
 --f. devolve os ultimos 3 elementos de uma lista
---   se uma lista tiver menos de 3 elementos devolve a
---   a propria lista
---tresUlt :: [a] -> [a]
---tresUlt l = l 
---tresUlt (e:b:c:d:as) = tresUlt (b:c:d:as)
+--   se uma lista tiver menos de 3 elementos devolve a propria lista
+tresUlt :: [a] -> [a]
+tresUlt [] = []
+tresUlt [h] = [h]
+tresUlt [h,y] = [h,y]
+tresUlt l = reverse (take 3 (reverse (l)))
 
 --g. que calcula a lista de segundas componentes dos pares
 segundos :: [(a,b)] -> [b]
