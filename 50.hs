@@ -60,9 +60,60 @@ colocaEntre x [y] = [y]
 colocaEntre x (h:hs) = h : x : colocaEntre x hs
 
 -- 12. agrupa [1,2,2,3,4,4,4,5,4] corresponde a [[1],[2,2],[3],[4,4,4],[5],[4]].
---grupa :: Eq a => [a] -> [[a]]
---grupa [] = []
---grupa (x:xs) = 
+grupa :: Eq a => [a] -> [[a]]
+grupa [] = []
+grupa (x:xs) = (x : takeWhile (== x) xs) : grupa (dropWhile (== x) xs)
+
+-- 13. desgrupa [[1],[2,2],[3],[4,4,4],[5],[4]] corresponde a [1,2,2,3,4,4,4,5,4]
+desgrupa :: [[a]] -> [a]
+desgrupa [] = [] 
+desgrupa (h:hs) = h ++ desgrupa hs
+
+--14. inits' [11,21,13] corresponde a [[],[11],[11,21],[11,21,13]]
+inits' :: [a] -> [[a]]
+inits' [] = []
+inits' l = inits' (init l) ++ [l] 
+
+--15. tails' [1,2,3] corresponde a [[1,2,3],[2,3],[3],[]]
+tails' :: [a] -> [[a]]
+tails' [] = [[]]
+tails' l = l : tails' (tail l)
+
+--16. isPrefixOf' [10,20] [10,20,30] corresponde a True enquanto que
+--isPrefixOf' [10,30] [10,20,30] corresponde a False
+isPrefixOf' :: Eq a => [a] -> [a] -> Bool
+isPrefixOf' [] _ = True 
+isPrefixOf' _ [] = False
+isPrefixOf' (x:xs) (y:ys) = if x == y then isPrefixOf' xs ys
+                            else False
+
+--17. isSuffixOf' [20,30] [10,20,30] corresponde a True enquanto 
+--que isSuffixOf' [10,30] [10,20,30] corresponde a False
+isSuffixOf' :: Eq a => [a] -> [a] -> Bool 
+isSuffixOf' [] _ = True
+isSuffixOf' _ [] = False
+isSuffixOf' (x:xs) (y:ys) = if x /= y then isSuffixOf' xs (y:ys)
+                            else False
+
+--18. isSubsequenceOf' [20,40] [10,20,30,40] corresponde a True 
+--enquanto que isSubsequenceOf' [40,20] [10,20,30,40] corresponde a False
+isSubsequenceOf' :: Eq a => [a] -> [a] -> Bool 
+isSubsequenceOf' [] _ = True
+isSubsequenceOf' _ [] = False
+isSubsequenceOf' (x:xs) (y:ys) = if x == y then isSubsequenceOf' xs ys
+                                 else isSubsequenceOf' (x:xs) ys
+
+--19. elemIndices' 3 [1,2,3,4,3,2,3,4,5] corresponde a [2,4,6]
+elemIndices' :: Eq a => a -> [a] -> [Int]
+elemIndices' _ [] = []
+elemIndices' x (h:hs) = if x == h then 0 : map (+1) (elemIndices' x hs)
+                        else map (+1) (elemIndices' x hs)
+
+--20. nub' [1,2,1,2,3,1,2] corresponde a [1,2,3]
+nub' :: Eq a => [a] -> [a]
+nub' [] = [] 
+nub' (h:hs) = h : filter (/= h) (nub' hs)
+
 
 
 
