@@ -87,3 +87,87 @@ conta _ [] = 0
 conta n ((_,e):rp) 
     | n == e = 1 + conta n rp
     | otherwise = conta n rp 
+    
+    
+    
+--c. selgrau
+selgrau :: Int -> Polinomio -> Polinomio
+selgrau _ [] = []
+selgrau g ((c,e):p) 
+        | g == e = (c,e) : selgrau g p
+        | g /= e = selgrau g p
+
+--d. deriv
+deriv :: Polinomio -> Polinomio
+deriv [] = []
+deriv ((c,e):p) 
+        | e /= 0 = (c*(fromIntegral e), e-1) : deriv p  
+        | e == 0 = deriv p
+
+--e. calcula 
+calcula :: Float -> Polinomio -> Float
+calcula _ [] = 0
+calcula x ((c,e):p) = (c * (x ^ e)) + calcula x p
+
+--f. simp
+simp :: Polinomio -> Polinomio 
+simp [] = []
+simp ((c,e):p) 
+        | c == 0 = simp p 
+        | c /= 0 = (c,e) : simp p
+
+--g. mult
+mult :: Monomio -> Polinomio -> Polinomio
+mult _ [] = []
+mult (c,e) ((c1,e1):p) = (c*c1, e+e1) : mult (c,e) p 
+
+--h. normaliza
+normaliza :: Polinomio -> Polinomio
+normaliza [] = []
+normaliza ((c,e):p) = 
+    let p1 = selgrau e ((c,e):p)
+        c1 = somaCoef p1
+        p2 = semgrau e p 
+    in if c1 /= 0 then (c1,e) : normaliza p2
+        else normaliza p2
+
+somaCoef :: Polinomio -> Float
+somaCoef [] = 0
+somaCoef ((c,_): p) = c + somaCoef p
+
+semgrau :: Int -> Polinomio -> Polinomio
+semgrau _ [] = []
+semgrau g ((c,e):p) 
+        | g /= e = (c,e) : semgrau g p
+        | g == e = semgrau g p
+
+--i. soma
+soma :: Polinomio -> Polinomio -> Polinomio
+soma p1 p2 = normaliza (p1 ++ p2)
+
+--j. produto
+produto :: Polinomio -> Polinomio -> Polinomio
+produto _ [] = []
+produto [] _ = []
+produto (m:p1) p2 = mult m p2 ++ produto p1 p2
+
+produtoF :: Polinomio -> Polinomio -> Polinomio
+produtoF p1 p2 = normaliza (produto p1 p2)
+
+--k. ordena
+ordena :: Polinomio -> Polinomio
+ordena [] = []
+ordena (m:p) = insere m (ordena p)
+    where insere :: Monomio -> Polinomio -> Polinomio
+          insere _ [] = []
+          insere (c,e) ((c1,e1) : p) 
+                | e < e1 = (c,e) : (c1,e1) : p 
+                | e > e1 = (c1,e1) : insere (c,e) p 
+                | e == e1 = (c+c1,e) : p
+
+--l. equiv
+equiv :: Polinomio -> Polinomio -> Bool
+equiv p1 p2 = ordena (normaliza p1) == ordena (normaliza p2)
+    
+    
+
