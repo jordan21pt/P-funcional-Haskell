@@ -114,7 +114,52 @@ nub' :: Eq a => [a] -> [a]
 nub' [] = [] 
 nub' (h:hs) = h : filter (/= h) (nub' hs)
 
+--21.delete' 2 [1,2,1,2,3,1,2] corresponde a [1,1,2,3,1,2].
+-- Se n˜ao existir nenhuma ocorrˆencia a 
+--fun¸c˜ao dever´a retornar a lista recebida
+delete' :: Eq a => a -> [a] -> [a]
+delete' _ [] = []
+delete' x (h:hs) = if x == h then hs 
+                    else h: delete' x hs
 
+--22. remLfromL [1,2,3,4,5,1] [1,5] corresponde a [2,3,4,1]
+remLfromL :: Eq a => [a] -> [a] -> [a]
+remLfromL [] _ = []
+remLfromL l [] = l
+remLfromL l (y:ys) = remLfromL (delete y l) ys
+
+--23. union' [1,1,2,3,4] [1,5] corresponde a [1,1,2,3,4,5]
+union' :: Eq a => [a] -> [a] -> [a] 
+union' l [] = l
+union' [] l = l
+union' l (x:xs) = if x `elem` l then union' l xs
+                    else union' (l ++ [x]) xs
+
+--24. intersect' [1,1,2,3,4] [1,3,5] corresponde a [1,1,3]
+intersect' :: Eq a => [a] -> [a] -> [a] 
+intersect' [] _ = []
+intersect' _ [] = []
+intersect' (x:xs) l = if x `elem` l then x : intersect' xs l
+                        else intersect' xs l 
+
+--25. insert' 25 [1,20,30,40] corresponde a [1,20,25,30,40]
+insert' _ [] = []
+insert' n (x:xs) 
+    | n <= x = n : x : xs
+    | otherwise = x : insert' n xs 
+
+--26. unwords' ["Programacao", "Funcional"] corresponde 
+--    a "Programacao Funcional".
+unwords' :: [String] -> String
+unwords' [] = ""
+unwords' [l1] = l1
+unwords' (l1:ls) = l1 ++ " " ++ unwords' ls
+
+--27. unlines' ["Prog", "Func"] corresponde a "Prog\nFunc\n".
+unlines' :: [String] -> String
+unlines' [] = ""
+unlines' [l1] = l1 ++ "\n"
+unlines' (l1:ls) = l1 ++ "\n" ++ unlines' ls
 
 
 
@@ -123,3 +168,183 @@ nub' (h:hs) = h : filter (/= h) (nub' hs)
 pMaior :: Ord a => [a] -> Int
 pMaior (h:hs) = if h == maximum (h:hs) then 0 
                 else 1 + pMaior hs
+
+--29. temRepetidos' [11,21,31,21] corresponde a True enquanto 
+--que temRepetidos' [11,2,31,4] corresponde a False
+temRepetidos' :: Eq a => [a] -> Bool
+temRepetidos' [] = False
+temRepetidos' (x:xs) = x `elem` xs || temRepetidos' xs
+
+--30. algarismos' "123xp5" corresponde a "1235".
+algarismos' :: [Char] -> [Char]
+algarismos' [] = []
+algarismos' (x:xs)
+    | isDigit x = x : algarismos' xs
+    | otherwise = algarismos' xs
+
+--31. posImpares' [10,11,7,5] corresponde a [11,5]
+posImpares' :: [a] -> [a] 
+posImpares' [] = []
+posImpares' [x] = []
+posImpares' (_:s:xs) = s : posImpares' xs
+
+--32. posPares' [10,11,7,5] corresponde a [10,7]
+posPares' :: [a] -> [a]
+posPares' [] = []
+posPares' [x] = [x]
+posPares' (x:_:xs) = x : posPares' xs
+
+--33. isSorted' [1,2,2,3,4,5] corresponde a True, 
+--enquanto que isSorted' [1,2,4,3,4,5] corresponde a False
+isSorted' :: Ord a => [a] -> Bool 
+isSorted' [] = True
+isSorted' [_] = True
+isSorted' (x:y:xs) = x <= y && isSorted' (y:xs)
+
+--34. que calcula o resultado de ordenar uma lista
+iSort' :: Ord a => [a] -> [a]
+iSort' [] = []
+iSort' (x:xs) = insert' x (iSort' xs)
+    where insert' :: Ord a => a -> [a] -> [a]
+          insert' x [] = [x]
+          insert' x (y:ys) 
+            | x <= y = x : y : ys 
+            | x > y = y : insert' x ys
+
+--35. menor "sai" "saiu" corresponde a True enquanto que menor "programacao"
+-- "funcional" corresponde a False
+menor' :: String -> String -> Bool
+menor' [] [] = False
+menor' [] (_:_) = True
+menor' (_:_) [] = False
+menor' (x:xs) (y:ys) 
+    | x > y = False
+    | x == y = menor' xs ys
+    | x < y = True
+
+--36. elemMSet' 'a' [('b',2), ('a',4), ('c',1)] corresponde a True enquanto
+--que elemMSet' 'd' [('b',2), ('a',4), ('c',1)] corresponde a False
+elemMSet' :: Eq a => a -> [(a,Int)] -> Bool
+elemMSet' _ [] = False
+elemMSet' x ((h,_):hs) 
+    | x == h = True
+    | x /= h = elemMSet' x hs
+
+--37. lengthMSet' [('b',2), ('a',4), ('c',1)] corresponde a 7.
+lengthMSet' :: [(a,Int)] -> Int
+lengthMSet' [] = 0
+lengthMSet' ((_,t):hs) = t + lengthMSet' hs
+
+--38. converteMSet' [('b',2), ('a',4), ('c',1)] corresponde a "bbaaaac"
+converteMSet' :: [(a,Int)] -> [a]
+converteMSet' [] = []
+converteMSet' ((h,1):hs) = h : converteMSet' hs
+converteMSet' ((h,t):hs) = h : converteMSet' ((h,t-1):hs)
+
+--39. insereMSet' 'c' [('b',2), ('a',4), ('c',1)]
+--  corresponde a [(’b’,2), (’a’,4), (’c’,2)]
+insereMSet' :: Eq a => a -> [(a,Int)] -> [(a,Int)]
+insereMSet' x [] = [(x, 1)]
+insereMSet' x ((h,t):hs) 
+    | x == h = (h,t+1) : hs
+    | x /= h = (h,t) : insereMSet' x hs
+
+--40. removeMSet' 'c' [('b',2), ('a',4), ('c',1)] 
+-- corresponde a [('b',2), ('a',4)].
+removeMSet' :: Eq a => a -> [(a,Int)] -> [(a,Int)]
+removeMSet' _ [] = []
+removeMSet' x ((h,t):hs) 
+    | x /= h = (h,t) : removeMSet' x hs
+    | x == h = removeMSet' x hs 
+
+--41. constroiMSet "aaabccc" corresponde a [(’a’,3), (’b’,1), (’c’,3)]
+constroiMSet' :: Ord a => [a] -> [(a,Int)] 
+constroiMSet' [] = []
+constroiMSet' (x:xs) = insereMSet' x (constroiMSet' xs)
+
+--42. que divide uma lista de Either s em duas listas
+partitionEithers' :: [Either a b] -> ([a],[b])
+partitionEithers' l = (partitionLeft l, partitionRight l)
+    where partitionLeft [] = []
+          partitionLeft ((Left x):xs) = x : partitionLeft xs
+          partitionLeft ((Right _):xs) = partitionLeft xs 
+          partitionRight [] = []
+          partitionRight ((Right x):xs) = x : partitionRight xs
+          partitionRight ((Left _):xs) = partitionRight xs
+
+--43. que colecciona os elementos do tipo a de uma lista
+catMaybes' :: [Maybe a] -> [a]
+catMaybes' [] = []
+catMaybes' ((Just a): xs) = a : catMaybes' xs
+catMaybes' (Nothing: xs) = catMaybes' xs
+
+--44. que, dada umaposicao inicial (coordenadas) e uma lista de movimentos, 
+-- calcula a posicao final do robot depois 
+-- de efectuar essa sequencia de movimentos
+data Movimento = Norte | Sul | Este | Oeste
+        deriving Show
+
+posicao :: (Int,Int) -> [Movimento] -> (Int,Int) 
+posicao (x,y) [Norte] = (x,y+1)
+posicao (x,y) [Sul]   = (x,y-1)
+posicao (x,y) [Este]  = (x+1,y)
+posicao (x,y) [Oeste] = (x-1,y)
+
+--45. que, dadas as posi¸c˜oes
+-- inicial e final (coordenadas) do robot, 
+-- produz uma lista de movimentos suficientes para que o
+-- robot passe de uma posi¸c˜ao para a outra.
+caminho :: (Int,Int) -> (Int,Int) -> [Movimento]
+caminho (xi,yi) (xf,yf) 
+    | xi < xf = Este : caminho (xi+1,yi) (xf,yf)
+    | xi > xf = Oeste : caminho (xi-1,yi) (xf,yf)
+    | yi < yf = Norte : caminho (xi,yi+1) (xf,yf)
+    | yi > yf = Sul : caminho (xi,yi-1) (xf,yf)
+    | otherwise = []
+
+--46. testa se uma lista de movimentos
+-- s´o ´e composta por movimentos verticais (Norte ou Sul)
+vertical :: [Movimento] -> Bool
+vertical [] = True
+vertical (x:xs) = case x of Este -> False
+                            Oeste -> False
+                            _ -> vertical xs
+
+--47. dada uma lista nao vazia de posicoes, 
+--determina a que esta mais perto da origem 
+--(note que as coordenadas de cada ponto sao numeros inteiros)
+data Posicao = Pos Int Int
+    deriving Show   
+maisCentral :: [Posicao] -> Posicao
+maisCentral [Pos x y] = Pos x y
+maisCentral ((Pos x1 y1): (Pos x2 y2): xs) 
+    | (x1^2 + y1^2) <= (x2^2 + y2^2) = maisCentral (Pos x1 y1: xs) 
+    | (x1^2 + y1^2) > (x2^2 + y2^2) = maisCentral (Pos x2 y2: xs)
+
+--48. dada uma posicao e uma lista de posicoes, 
+--selecciona da lista as posicoes adjacentes a posicao dada
+vizinhos :: Posicao -> [Posicao] -> [Posicao] 
+vizinhos _ [] = []
+vizinhos (Pos x y) ((Pos x1 y1) :xs) = 
+    if abs (x - x1) == 1 && y == y1 || abs (y - y1) == 1 && x == x1
+    then Pos x1 y1 : vizinhos (Pos x y) xs
+    else vizinhos (Pos x y) xs 
+
+--49. testa se todas as posicoes de uma dada lista tem a mesma ordenada
+mesmaOrdenada :: [Posicao] -> Bool
+mesmaOrdenada [] = True
+mesmaOrdenada [Pos _ _] = True
+mesmaOrdenada ((Pos x y): (Pos _ y1): xs) = 
+    y == y1 && mesmaOrdenada (Pos x y : xs)
+
+--50. nao ha mais do que semaforo nao vermelho
+data Semaforo = Verde | Amarelo | Vermelho
+        deriving Show
+
+interseccaoOK :: [Semaforo] -> Bool
+interseccaoOK l = verificaNvermelhos l <= 1
+    where verificaNvermelhos :: [Semaforo] -> Int 
+        --funcao que conta o n de nao vermelhos
+          verificaNvermelhos [] = 0 
+          verificaNvermelhos (Vermelho:t) = verificaNvermelhos t
+          verificaNvermelhos (_:t) = 1 + verificaNvermelhos t
