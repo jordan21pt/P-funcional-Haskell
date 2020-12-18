@@ -1,6 +1,12 @@
 data BTree a = Empty | 
                Node a (BTree a) (BTree a)
              deriving Show 
+             
+ arvore = Node 15 (Node 10 (Node 7 Empty Empty)
+                           (Node 11 Empty Empty))
+                  (Node 20 Empty Empty)
+                           
+                  
 
 --a. 
 contaNodos :: BTree a -> Int
